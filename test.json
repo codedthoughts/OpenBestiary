@@ -1,0 +1,14 @@
+{
+	"_META":{
+		"author":"Kaiser", 
+		"game": "Python"
+	},
+	"Monster of Test":{
+		"HP": 100
+	},
+	"Debugger Demon":{
+		"HP": 9999,
+		"Weakness": "Bugs",
+		"Absorbs": "Compilers"
+	}
+}
