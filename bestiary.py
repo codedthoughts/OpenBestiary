@@ -18,7 +18,7 @@ class EnhancedJSONEncoder(json.JSONEncoder):
             return super().default(o)
 		
 def getConfig(parent="", key="", *, filename="config"):
-	with open(filename+".json") as f:
+	with open(scriptdir+filename+".json") as f:
 		data = json.load(f)
 		
 		if parent == "" and key == "":
@@ -41,15 +41,15 @@ def setConfig(parent:str, key:str, value, *, filename="config", logging=False):
 	except:
 		data[parent] = {}
 		data[parent][key] = value
-	with open(filename+'.json', "w") as s:
+	with open(scriptdir+filename+'.json', "w") as s:
 		json.dump(data, s, indent=4, sort_keys=True)
 
 def dumpConfig(data, filename="config"):
-	with open(filename+'.json', "w") as s:
+	with open(scriptdir+filename+'.json', "w") as s:
 		json.dump(data, s, indent=4, sort_keys=True)
 
 def touchConfig(parent:str, key:str, default, *, filename="config"):
-	with open(filename+".json") as f:
+	with open(scriptdir+filename+".json") as f:
 		data = json.load(f)
 		try:
 			return data[parent][key]
