@@ -2,8 +2,8 @@
 An open-source bestiary simple bestiary for RPG games, allowing users to create and manage entries and organize games seperately.
 
 # To-do
-[ ] Web version
-[ ] Improve GUI
+[ ] Web version<br>
+[ ] Improve GUI<br>
 [ ] Some kind of bestiary json submission system.
 
 # NOTE
