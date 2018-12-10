@@ -1,6 +1,62 @@
 {
-	"_META":{
-		"author":"Kaiser", 
-		"game": "Legend of Heroes"
-	}
+    "_META": {
+        "game": "Legend of Heroes",
+        "author": "Kaiser",
+        "contact": "",
+        "platform": "PSP",
+        "devs": "Nihon Falcom",
+        "notes": "Missing first 2 chapters enemies."
+    },
+    "Flame Blow Cybil": {
+        "Region": "Highway of Two Towns"
+    },
+    "B-Vatar": {},
+    "A-Vatar": {
+        "Region": "Highway of Two Towns"
+    },
+    "Special Bee": {
+        "Region": "Karkus Passage"
+    },
+    "Red Fin Frog": {
+        "Region": "Karkus Passage"
+    },
+    "Scouting Bird": {},
+    "Cluster Bee": {},
+    "Poison Beetle": {
+        "Region": "Karkus Cave"
+    },
+    "Beaten": {
+        "Region": "Karkus Cave"
+    },
+    "Wind Mantis": {
+        "Region": "Tree Spirit Forest"
+    },
+    "Garden Snail": {
+        "Region": "Spirit Forest"
+    },
+    "Slay Mantis": {
+        "Region": "Tree Spirit Forest - Golda Mntn Pass"
+    },
+    "Mesthis": {
+        "Region": "Gorgo Cave, Guia"
+    },
+    "Thin Blood Bat": {
+        "Region": "Gorgo Cave"
+    },
+    "Big Beaten": {
+        "Region": "Gorgo Cave",
+        "Classification": "Mini-boss"
+    },
+    "Rock Monkey": {
+        "Region": "Koruna Mtn Path, Guia"
+    },
+    "Blue Glass Bee": {
+        "Region": "Path to Guia"
+    },
+    "Rapupi": {
+        "Region": "Koruna Mtn Path"
+    },
+    "Impulse Cybil": {
+        "Region": "Guia"
+    }
 }
