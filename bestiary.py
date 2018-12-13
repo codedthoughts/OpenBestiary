@@ -59,27 +59,6 @@ def touchConfig(parent:str, key:str, default, *, filename="config"):
 			return default
 
 def load_game(game):
-	print(game.get())
-	try:
-		data = getConfig(filename=game.get())
-		print(data)
-		for item in data:
-			if item.startswith("_"): #Meta data keys
-				messagebox.showinfo(message=f"Author: {data[item]['author']}\nGame: {data[item]['game']}")
-			else:
-				bgui.modules.insert(0, item)
-		bgui.cur_game = game.get()
-		
-	except FileNotFoundError:
-		print("FILE NOT FOUND")
-		
-def load_game_from_list(game_list, sw):
-	try:
-		index = int(game_list.curselection()[0])
-	except IndexError:
-		return
-	
-	game = game_list.get(index)
 	print(game)
 	bgui.modules.delete(0, 'end')
 	try:
@@ -93,12 +72,36 @@ def load_game_from_list(game_list, sw):
 			bgui.fbut.config(state="normal")
 		else:
 			bgui.fbut.config(state="disable")
-			
-		s = ""
-		for item in data['_META']:
-			if data['_META'][item] != "":
-				s += f"{item.capitalize()}: {data['_META'][item]}\n"
-		messagebox.showinfo(message=s)	
+		
+		for item in data:
+			if not item.startswith("_"): #Meta data keys
+				bgui.modules.insert('end', item)
+		bgui.cur_game = game
+		
+	except FileNotFoundError:
+		print("FILE NOT FOUND")
+		
+def load_game_from_list(game_list, sw):
+	try:
+		index = int(game_list.curselection()[0])
+	except IndexError:
+		return
+	
+	game = game_list.get(index)
+	print(game)
+	setConfig('core', 'previous_game', game)
+	bgui.modules.delete(0, 'end')
+	try:
+		data = getConfig(filename=game)
+		print(data)
+		bgui.abut.config(state="normal")
+		bgui.rbut.config(state="normal")
+		bgui.ebut.config(state="normal")
+		bgui.dbut.config(state="normal")
+		if len(data) > 1:
+			bgui.fbut.config(state="normal")
+		else:
+			bgui.fbut.config(state="disable")
 		
 		for item in data:
 			if not item.startswith("_"): #Meta data keys
@@ -190,22 +193,11 @@ def minus_editor_line(en, ev):
 	
 def load_mob():
 	data = getConfig(filename=bgui.cur_game)
-	print(data[bgui.currently_selected])
-	w = tkinter.Tk()
-	frame = tkinter.Frame(w)
-	frame.grid()
-	mobs = tkinter.Listbox(frame, height=20, width=40)
-	mobs.grid(rowspan=6, columnspan=4, sticky="nsew")
-	mobsc = tkinter.Scrollbar(frame)
-	mobsc.grid(column=4, row=0, rowspan=6, sticky="ns")
-	mobsc.config(command=mobs.yview)
-	mobs.config(yscrollcommand=mobsc.set)	
-
-	mob = data[bgui.currently_selected]
-	w.title(bgui.currently_selected)
-	for item in mob:	
-		mobs.insert('end', f"{item}: {mob[item]}")
-	mobs.insert(0, bgui.currently_selected)	
+	s = ""
+	for item in data['_META']:
+		if data['_META'][item] != "":
+			s += f"{item.capitalize()}: {data['_META'][item]}\n"
+	messagebox.showinfo(message=s)	
 
 def reload_mobs():
 	game = bgui.cur_game
@@ -236,7 +228,15 @@ def onselect(evt):
 	# value = w.get(index)
 	bgui.currently_selected = w.get(index)
 	print(bgui.currently_selected)
-
+	data = getConfig(filename=bgui.cur_game)
+	print(data[bgui.currently_selected])
+	bgui.mobbie.delete(0, 'end')
+	mob = data[bgui.currently_selected]
+	for item in mob:	
+		bgui.mobbie.insert('end', f"{item}: {mob[item]}")
+	bgui.mobbie.insert(0, bgui.currently_selected)	
+	bgui.mobbie.itemconfig(0, {'bg':'silver'})
+	
 def about():
 	print("None")
 
@@ -317,16 +317,24 @@ def save_game_meta(filename, name, author, contact, platform, notes, devs, new_g
 		
 def find_game():
 	w = tkinter.Tk()
+	w.title("Load Game")
 	ls = tkinter.Listbox(w)
 	ls.pack()
 	for file in os.listdir(scriptdir):
 		filename = os.fsdecode(file)
-		if filename.endswith('json'):
+		if filename.endswith('json') and filename != "config.json":
 			ls.insert('end', filename.split(".")[0])
 	srch = partial(load_game_from_list, ls, w)
 	b = tkinter.Button(w, text="Load", command=srch)
-	b.pack()	
+	b.pack()
 	
+def command_autoload():
+	previous_game = touchConfig('core', 'previous_game', '')
+	if previous_game != '':
+		load_game(previous_game)
+	else:
+		tkinter.messagebox.showerror("No game loaded.")
+		
 class bestiary:
 	def __init__(self):
 		self.cur_game = ""
@@ -335,26 +343,46 @@ class bestiary:
 		
 		self.mainwin = tkinter.Tk()
 		self.mainwin.title("Bestiary")
+		
 		self.modules = tkinter.Listbox(self.mainwin, height=15)
-		self.modules.grid(rowspan=6, columnspan=4)
+		self.modules.grid(rowspan=6, columnspan=4, row=1, column=6, sticky="news")
 		self.modules_scroll = tkinter.Scrollbar(self.mainwin)
-		self.modules_scroll.grid(column=4, row=0, rowspan=6, sticky="ns")
+		self.modules_scroll.grid(column=11, row=1, rowspan=6, sticky="ns")
 		self.modules_scroll.config(command=self.modules.yview)
 		self.modules.config(yscrollcommand=self.modules_scroll.set)	
 		self.modules.bind('<<ListboxSelect>>', onselect)
 		
-		self.fbut = tkinter.Button(self.mainwin, text="Get Info", command=load_mob, state='disabled', width=7)
-		self.fbut.grid(row=0, column=5, sticky="ns")
+		self.mobbie = tkinter.Listbox(self.mainwin, height=15)
+		self.mobbie.grid(rowspan=6, columnspan=4, row=1, column=0, sticky="news")
+		self.mobbie_scroll = tkinter.Scrollbar(self.mainwin)
+		self.mobbie_scroll.grid(column=5, row=1, rowspan=6, sticky="ns")
+		self.mobbie_scroll.config(command=self.mobbie.yview)
+		self.mobbie.config(yscrollcommand=self.mobbie_scroll.set)	
+		self.mobbie.configure(bg="grey")
+		for i in range(0, 4):
+			print(i)
+			self.mainwin.columnconfigure(i, weight=1)
+		
+		for i in range(1, 7):
+			print(i)
+			self.mainwin.rowconfigure(i, weight=1)
+		
+		self.fbut = tkinter.Button(self.mainwin, text="Show Info", command=load_mob, state='disabled', width=7)
+		self.fbut.grid(row=1, column=12, sticky="ns")
 		self.abut = tkinter.Button(self.mainwin, text="Add Mob", command=add_mob, state='disabled', width=7)
-		self.abut.grid(row=1, column=5, sticky="ns")
+		self.abut.grid(row=2, column=12, sticky="ns")
 		self.rbut = tkinter.Button(self.mainwin, text="Reload", command=reload_mobs, state='disabled', width=7)
-		self.rbut.grid(row=2, column=5, sticky="ns")
+		self.rbut.grid(row=3, column=12, sticky="ns")
 		edit_mob = partial(add_mob, True)
 		self.ebut = tkinter.Button(self.mainwin, text="Edit Mob", command=edit_mob, state='disabled', width=7)
-		self.ebut.grid(row=3, column=5, sticky="ns")
+		self.ebut.grid(row=4, column=12, sticky="ns")
 		self.dbut = tkinter.Button(self.mainwin, text="Delete Mob", command=delete_mob, state='disabled', width=7)
-		self.dbut.grid(row=4, column=5, sticky="ns")
+		self.dbut.grid(row=5, column=12, sticky="ns")
 		
+		self.check_auto = tkinter.Button(self.mainwin, text="Load Last", command=command_autoload, width=7)
+		self.check_auto.grid(row=6, column=12, sticky="ns")
+
+			
 		self.menu = tkinter.Menu(self.mainwin)
 		self.mainwin.config(menu=self.menu)
 		self.filemenu = tkinter.Menu(self.mainwin)
@@ -366,7 +394,6 @@ class bestiary:
 		self.filemenu.add_command(label="New Game", command=edit_game_load)
 		self.filemenu.add_separator()
 		self.filemenu.add_command(label="Exit", command=self.mainwin.destroy)
-		#load_game("test")
 		
 def begin():
 	global bgui

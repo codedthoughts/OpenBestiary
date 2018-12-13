@@ -58,5 +58,42 @@
     },
     "Impulse Cybil": {
         "Region": "Guia"
+    },
+    "Zen Shen": {
+        "Region": "Icon Passage"
+    },
+    "Gambler Squid": {
+        "Region": "Icon Passage"
+    },
+    "Obis": {
+        "Region": "Volkd (Event), Quitt Highway"
+    },
+    "Shell Squilla": {
+        "Region": "Quitt Highway"
+    },
+    "Twin Kompe": {},
+    "Rakeruta Dragon": {
+        "Region": "Scotia Shrine, Idun Shrine Path"
+    },
+    "Hazaman": {
+        "Region": "Scotia Shrine"
+    },
+    "Tagos": {
+        "Region": "Scotia Shrine"
+    },
+    "Scotia": {
+        "Region": "Scotia Shrine"
+    },
+    "Arv Tal": {
+        "Region": "Grand Canyon"
+    },
+    "Canyon Bat": {
+        "Region": "Grand Canyon"
+    },
+    "Sorcerer": {
+        "Region": "New Borun Cathedral"
+    },
+    "Assassin": {
+        "Region": "New Borun Cathedral"
     }
 }

@@ -1,0 +1,14 @@
+{
+    "_META": {
+        "game": "CONFIG",
+        "author": "Kaiser",
+        "contact": "",
+        "platform": "",
+        "devs": "",
+        "notes": "This is not a bestiary file. This is the config file for the application."
+    },
+    "core": {
+        "autoload": false,
+        "previous_game": "Legend of Heroes"
+    }
+}
